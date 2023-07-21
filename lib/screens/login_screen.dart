@@ -1,5 +1,6 @@
 import 'package:banking_app/screens/register_screens/register_main.dart';
 import 'package:banking_app/utils/constants.dart';
+import 'package:banking_app/widgets/app_button.dart';
 import 'package:banking_app/widgets/onboarding_app_bar.dart';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String emailUsername = '';
+  String password = '';
+
+  final _emailUsernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  void assignValues() {
+    setState(() {
+      emailUsername = _emailUsernameController.text;
+      password = _passwordController.text;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       width: Sizes.size380,
                       child: TextField(
+                        controller: _emailUsernameController,
+                        onChanged: (value) => assignValues(),
                         textAlign: TextAlign.start,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
@@ -67,6 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         width: Sizes.size380,
                         child: TextField(
+                          controller: _passwordController,
+                          onChanged: (value) => assignValues(),
                           obscureText: true,
                           textAlign: TextAlign.start,
                           decoration: InputDecoration(
@@ -89,7 +107,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                const LoginButton(),
+                Padding(
+                  padding: EdgeInsets.only(top: Sizes.size32),
+                  child: AppButton(
+                    isValid: true,
+                    title: 'Login',
+                    registerType: 'login',
+                    registerData: [emailUsername, password],
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: Sizes.size16),
                   child: Text(

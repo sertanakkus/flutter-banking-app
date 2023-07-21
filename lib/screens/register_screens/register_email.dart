@@ -96,7 +96,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
                       isValid: _isValid,
                       targetWidget: const RegisterUsername(),
                       registerType: 'email',
-                      registerData: _emailController.text,
+                      registerData: [_emailController.text],
                     ),
                   ),
                 ],

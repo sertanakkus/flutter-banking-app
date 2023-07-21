@@ -92,7 +92,7 @@ class _RegisterEmailState extends State<RegisterPassword> {
                       isValid: _isValid,
                       targetWidget: const RegisterPhone(),
                       registerType: 'password',
-                      registerData: _passwordController.text,
+                      registerData: [_passwordController.text],
                     ),
                   ),
                 ],

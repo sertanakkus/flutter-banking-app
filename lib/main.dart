@@ -1,3 +1,4 @@
+import 'package:banking_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/onboarding_screens/onboarding_page.dart';
@@ -6,6 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:banking_app/models/user_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,21 +24,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.black54),
-        inputDecorationTheme: const InputDecorationTheme(
-          labelStyle: TextStyle(color: Colors.black),
-          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54)),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserModel>(create: (_) => (UserModel())),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.black54),
+          inputDecorationTheme: const InputDecorationTheme(
+            labelStyle: TextStyle(color: Colors.black),
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54)),
+          ),
+          appBarTheme: const AppBarTheme(
+            systemOverlayStyle: SystemUiOverlayStyle.dark,
+            foregroundColor: Colors.black,
+          ),
+          colorScheme: const ColorScheme.light(),
         ),
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-          foregroundColor: Colors.black,
-        ),
-        colorScheme: const ColorScheme.light(),
+        home: const OnboardingPage(),
+        routes: {"/home": (context) => const HomeScreen()},
       ),
-      home: const OnboardingPage(),
     );
   }
 }

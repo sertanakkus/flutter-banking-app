@@ -40,7 +40,6 @@ class CountryPhoneCodes {
     {"code": "+257", "name": "Burundi"},
     {"code": "+855", "name": "Cambodia"},
     {"code": "+237", "name": "Cameroon"},
-    {"code": "+1", "name": "Canada"},
     {"code": "+238", "name": "Cape Verde"},
     {"code": "+ 345", "name": "Cayman Islands"},
     {"code": "+236", "name": "Central African Republic"},

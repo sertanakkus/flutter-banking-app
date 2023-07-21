@@ -1,4 +1,3 @@
-import 'package:banking_app/screens/vertification_screen.dart';
 import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/info.dart';
 import 'package:flutter/material.dart';
@@ -19,18 +18,12 @@ class _RegisterPhoneState extends State<RegisterPhone> {
   final _phoneController = TextEditingController();
   bool _isValid = false;
 
-  late String dropdownValue;
+  String dropdownValue = "+90";
   void _validatePhone(String phone) {
     bool isValid = phone.length >= 5;
     setState(() {
       _isValid = isValid;
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    dropdownValue = countryPhoneCodes.first['code']!;
   }
 
   @override
@@ -85,7 +78,6 @@ class _RegisterPhoneState extends State<RegisterPhone> {
                         value: dropdownValue,
                         onChanged: (String? value) {
                           setState(() {
-                            print(value);
                             dropdownValue = value!;
                           });
                         },
@@ -118,7 +110,8 @@ class _RegisterPhoneState extends State<RegisterPhone> {
                     child: AppButton(
                       title: Strings.next,
                       isValid: _isValid,
-                      targetWidget: const VertificationScreen(),
+                      registerType: 'phone',
+                      registerData: [dropdownValue + _phoneController.text],
                     ),
                   ),
                 ],
