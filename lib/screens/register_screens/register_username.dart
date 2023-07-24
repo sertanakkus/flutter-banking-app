@@ -3,6 +3,7 @@ import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/info.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/auth_service.dart';
 import '../../widgets/app_button.dart';
 
 class RegisterUsername extends StatefulWidget {
@@ -15,12 +16,19 @@ class RegisterUsername extends StatefulWidget {
 class _RegisterEmailState extends State<RegisterUsername> {
   final _usernameController = TextEditingController();
   bool _isValid = false;
+  bool _isUsernameAvailable = false;
 
-  void _validateUsername(String username) {
+  Future<void> _validateUsername(String username) async {
     bool isValid = username.length >= 6;
+    _isUsernameAvailable = await AuthService().checkUsername(username);
+
     setState(() {
       _isValid = isValid;
     });
+  }
+
+  bool _checkUsername() {
+    return _isUsernameAvailable && _isValid;
   }
 
   @override
@@ -71,17 +79,19 @@ class _RegisterEmailState extends State<RegisterUsername> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: Sizes.size380,
-                        child: TextField(
-                          controller: _usernameController,
-                          onChanged: (value) {
-                            _validateUsername(_usernameController.text);
-                          },
-                          textAlign: TextAlign.start,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelText: Strings.username,
+                      Expanded(
+                        child: SizedBox(
+                          width: Sizes.size380,
+                          child: TextField(
+                            controller: _usernameController,
+                            onChanged: (value) {
+                              _validateUsername(_usernameController.text);
+                            },
+                            textAlign: TextAlign.start,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: Strings.username,
+                            ),
                           ),
                         ),
                       ),
@@ -92,7 +102,7 @@ class _RegisterEmailState extends State<RegisterUsername> {
                     padding: EdgeInsets.only(bottom: Sizes.size55),
                     child: AppButton(
                       title: Strings.next,
-                      isValid: _isValid,
+                      isValid: _checkUsername(),
                       targetWidget: const RegisterPassword(),
                       registerType: 'username',
                       registerData: [_usernameController.text],

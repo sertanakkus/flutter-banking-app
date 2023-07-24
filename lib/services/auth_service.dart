@@ -69,4 +69,20 @@ class AuthService {
     bool isValid = EmailValidator.validate(email);
     return isValid;
   }
+
+  Future<bool> checkEmail(String email) async {
+    QuerySnapshot query = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: email).get();
+    return query.docs.isEmpty ? true : false;
+  }
+
+  Future<bool> checkUsername(String username) async {
+    QuerySnapshot query =
+        await FirebaseFirestore.instance.collection('users').where('username', isEqualTo: username).get();
+    return query.docs.isEmpty ? true : false;
+  }
+
+  Future<bool> checkPhone(String phone) async {
+    QuerySnapshot query = await FirebaseFirestore.instance.collection('users').where('phone', isEqualTo: phone).get();
+    return query.docs.isEmpty ? true : false;
+  }
 }

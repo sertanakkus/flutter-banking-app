@@ -1,7 +1,6 @@
 import 'package:banking_app/screens/home_screen.dart';
+import 'package:banking_app/screens/main_page_controller.dart';
 import 'package:flutter/material.dart';
-
-import 'screens/onboarding_screens/onboarding_page.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -42,7 +41,7 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: const ColorScheme.light(),
         ),
-        home: const OnboardingPage(),
+        home: const MainPageController(),
         routes: {"/home": (context) => const HomeScreen()},
       ),
     );

@@ -72,15 +72,17 @@ class _RegisterEmailState extends State<RegisterPassword> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      InputTextField(labelText: Strings.password, isRePasssword: false),
+                      Expanded(child: InputTextField(labelText: Strings.password, isRePasssword: false)),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: Sizes.size16),
-                        child: InputTextField(labelText: Strings.rePassword, isRePasssword: true),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: Sizes.size16),
+                          child: InputTextField(labelText: Strings.rePassword, isRePasssword: true),
+                        ),
                       ),
                     ],
                   ),

@@ -1,3 +1,4 @@
+import 'package:banking_app/services/auth_service.dart';
 import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/info.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,25 @@ class RegisterEmail extends StatefulWidget {
 class _RegisterEmailState extends State<RegisterEmail> {
   final _emailController = TextEditingController();
   bool _isValid = false;
+  bool _isEmailAvailable = false;
 
-  void _validateEmail(String email) {
+  Future<void> _validateEmail(String email) async {
     bool isValid = EmailValidator.validate(email);
+    _isEmailAvailable = await AuthService().checkEmail(email);
+
     setState(() {
       _isValid = isValid;
     });
   }
+
+  bool _checkEmail() {
+    return _isEmailAvailable && _isValid;
+  }
+
+  // Future<void> _checkEmail(String email) async {
+  //   _isEmailAvailable = await AuthService().checkEmail(email);
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -72,28 +85,36 @@ class _RegisterEmailState extends State<RegisterEmail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: Sizes.size380,
-                        child: TextField(
-                          controller: _emailController,
-                          onChanged: (value) {
-                            _validateEmail(_emailController.text);
-                          },
-                          textAlign: TextAlign.start,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelText: Strings.email,
+                      Expanded(
+                        child: SizedBox(
+                          width: Sizes.size380,
+                          child: TextField(
+                            controller: _emailController,
+                            onChanged: (value) {
+                              _validateEmail(_emailController.text);
+                            },
+                            textAlign: TextAlign.start,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: Strings.email,
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
+                  _checkEmail()
+                      ? const Text('available email')
+                      : const Text(
+                          'not available',
+                          style: TextStyle(color: Colors.red),
+                        ),
                   const Spacer(),
                   Padding(
                     padding: EdgeInsets.only(bottom: Sizes.size55),
                     child: AppButton(
                       title: Strings.next,
-                      isValid: _isValid,
+                      isValid: _checkEmail(),
                       targetWidget: const RegisterUsername(),
                       registerType: 'email',
                       registerData: [_emailController.text],

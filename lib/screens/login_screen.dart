@@ -59,15 +59,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: Sizes.size380,
-                      child: TextField(
-                        controller: _emailUsernameController,
-                        onChanged: (value) => assignValues(),
-                        textAlign: TextAlign.start,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          labelText: Strings.emailUsername,
+                    Expanded(
+                      child: SizedBox(
+                        width: Sizes.size380,
+                        child: TextField(
+                          controller: _emailUsernameController,
+                          onChanged: (value) => assignValues(),
+                          textAlign: TextAlign.start,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(),
+                            labelText: Strings.emailUsername,
+                          ),
                         ),
                       ),
                     ),
@@ -80,16 +82,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: Sizes.size380,
-                        child: TextField(
-                          controller: _passwordController,
-                          onChanged: (value) => assignValues(),
-                          obscureText: true,
-                          textAlign: TextAlign.start,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelText: Strings.password,
+                      Expanded(
+                        child: SizedBox(
+                          width: Sizes.size380,
+                          child: TextField(
+                            controller: _passwordController,
+                            onChanged: (value) => assignValues(),
+                            obscureText: true,
+                            textAlign: TextAlign.start,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: Strings.password,
+                            ),
                           ),
                         ),
                       ),

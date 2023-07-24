@@ -9,6 +9,7 @@ class Sizes {
   static double size8 = 8;
   static double size12 = 12;
   static double size16 = 16;
+  static double size20 = 20;
   static double size24 = 24;
   static double size29 = 29;
   static double size30 = 30;
@@ -48,6 +49,14 @@ class ImagePaths {
   static String message = 'assets/msg.png';
 
   static String companyIcon = 'assets/company_icon.png';
+
+  // home screen
+  static String companyIconColor = 'assets/company_icon_color.png';
+  static String scanner = 'assets/scanner_icon.png';
+
+  static String money_send = 'assets/home_images/money_send.png';
+  static String money_receive = 'assets/home_images/money_recive.png';
+  static String receipt = 'assets/home_images/receipt.png';
 }
 
 class Strings {

@@ -2,6 +2,7 @@ import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/info.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/auth_service.dart';
 import '../../widgets/app_button.dart';
 
 import '../../utils/country_phone_codes.dart';
@@ -17,13 +18,20 @@ class _RegisterPhoneState extends State<RegisterPhone> {
   final List<Map<String, String>> countryPhoneCodes = CountryPhoneCodes().phoneList;
   final _phoneController = TextEditingController();
   bool _isValid = false;
+  bool _isPhoneAvailable = false;
 
   String dropdownValue = "+90";
-  void _validatePhone(String phone) {
-    bool isValid = phone.length >= 5;
+  Future<void> _validatePhone(String phone) async {
+    bool isValid = phone.length == 10;
+    _isPhoneAvailable = await AuthService().checkPhone(phone);
+
     setState(() {
       _isValid = isValid;
     });
+  }
+
+  bool _checkPhone() {
+    return _isPhoneAvailable && _isValid;
   }
 
   @override
