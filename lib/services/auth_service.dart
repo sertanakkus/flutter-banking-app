@@ -39,9 +39,9 @@ class AuthService {
           email: _isEmail(email) ? email : snapshot.docs.first['email'], password: password);
       if (userCredential.user != null) {
         // print(userCredential.user!.uid);
-        final userDoc = await userCollection.doc(userCredential.user!.uid).get().then((value) => value.data());
+        // final userDoc = await userCollection.doc(userCredential.user!.uid).get().then((value) => value.data());
 
-        navigator.pushNamed('/home', arguments: userDoc?['username']);
+        navigator.pushNamed('/home', arguments: await getUserData(userCredential.user!.uid));
       }
     } on FirebaseAuthException catch (e) {
       if (kDebugMode) {
@@ -52,6 +52,11 @@ class AuthService {
         }
       }
     }
+  }
+
+  Future<Object?> getUserData(String uid) async {
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    return snapshot.data();
   }
 
   Future<void> registerUser(

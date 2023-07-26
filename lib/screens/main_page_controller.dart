@@ -8,16 +8,17 @@ class MainPageController extends StatefulWidget {
   const MainPageController({super.key});
 
   @override
-  State<MainPageController> createState() => _MainPageControllerState();
+  State<MainPageController> createState() => MainPageControllerState();
 }
 
-class _MainPageControllerState extends State<MainPageController> {
+class MainPageControllerState extends State<MainPageController> {
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    PocketScreen(),
-    PocketScreen(),
-    PocketScreen(),
+
+  final List<Widget> _widgetOptions = <Widget>[
+    const HomeScreen(),
+    const PocketScreen(),
+    const PocketScreen(),
+    const PocketScreen(),
   ];
 
   void _onItemTapped(int index) {

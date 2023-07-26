@@ -7,7 +7,9 @@ mixin AppColors {
 
 class Sizes {
   static double size8 = 8;
+  static double size10 = 10;
   static double size12 = 12;
+  static double size14 = 14;
   static double size16 = 16;
   static double size20 = 20;
   static double size24 = 24;
@@ -25,6 +27,7 @@ class Sizes {
   static double size72 = 72;
   static double size89 = 89;
   static double size92 = 92;
+  static double size140 = 140;
   static double size200 = 200;
   static double size255 = 255;
   static double size261 = 261;
@@ -57,6 +60,14 @@ class ImagePaths {
   static String money_send = 'assets/home_images/money_send.png';
   static String money_receive = 'assets/home_images/money_recive.png';
   static String receipt = 'assets/home_images/receipt.png';
+
+  static String offer = 'assets/home_images/offer.png';
+  static String wallet2 = 'assets/home_images/wallet_2.png';
+
+  static String cardFrame1 = 'assets/home_images/card_items/card_frame_1.png';
+  static String cardLogo = 'assets/home_images/card_items/card_logo.png';
+  static String chip = 'assets/home_images/card_items/chip.png';
+  static String coin = 'assets/home_images/coin.png';
 }
 
 class Strings {
@@ -118,4 +129,18 @@ class Strings {
   // verify screen
   static String verify = 'Verify';
   static String verifyDesc = "Enter the verification code that we sent to ";
+
+  // home screen
+  static String yourBalance = 'Your Balance';
+
+  static String send = 'Send';
+  static String request = 'Request';
+  static String history = 'History';
+
+  static String letsConnect = "Let's Connect";
+  static String offerDescription = "Connect account with marketplace for automatic payment and get \$25 bonus";
+
+  static String myPocket = "My Pocket";
+  static String create = "Create";
+  static String currency = "Currency";
 }

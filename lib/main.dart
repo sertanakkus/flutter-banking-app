@@ -1,4 +1,4 @@
-import 'package:banking_app/screens/home_screen.dart';
+import 'package:banking_app/screens/login_screen.dart';
 import 'package:banking_app/screens/main_page_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: const ColorScheme.light(),
         ),
-        home: const MainPageController(),
-        routes: {"/home": (context) => const HomeScreen()},
+        home: const LoginScreen(),
+        routes: {"/home": (context) => const MainPageController()},
       ),
     );
   }

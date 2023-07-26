@@ -5,8 +5,19 @@ class UserModel extends ChangeNotifier {
   String? username;
   String? password;
   String? phone;
+  List<Map>? cards;
+  num? totalBalance;
 
-  UserModel({this.email, this.phone, this.username, this.password});
+  UserModel({this.email, this.phone, this.username, this.password, this.cards, this.totalBalance});
+
+  UserModel.fromJson(Map json) {
+    email = json["email"];
+    username = json["username"];
+    password = json["password"];
+    phone = json["phone"];
+    cards = json["cards"];
+    totalBalance = json["totalBalance"];
+  }
 
   void setEmail(String value) {
     email = value;
