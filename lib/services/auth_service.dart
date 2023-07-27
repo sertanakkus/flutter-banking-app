@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter/foundation.dart';
@@ -18,7 +20,13 @@ class AuthService {
       final UserCredential userCredential =
           await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       if (userCredential.user != null) {
-        await registerUser(user: userCredential, username: username, email: email, password: password, phone: phone);
+        await registerUser(
+            user: userCredential,
+            id: userCredential.user!.uid,
+            username: username,
+            email: email,
+            password: password,
+            phone: phone);
         navigator.pushNamed('/home', arguments: userCredential.user!.uid);
       }
     } on FirebaseAuthException catch (e) {
@@ -61,13 +69,59 @@ class AuthService {
 
   Future<void> registerUser(
       {required UserCredential user,
+      required String id,
       required String username,
       required String email,
       required String password,
       required String phone}) async {
-    await userCollection
-        .doc(user.user!.uid)
-        .set({"email": email, "username": username, "password": password, "phone": phone});
+    await userCollection.doc(user.user!.uid).set({
+      "account_no": generateRandomNumber(),
+      "cards": [],
+      "email": email,
+      "id": id,
+      "password": password,
+      "phone": phone,
+      "total_balance": 0,
+      "username": username
+    });
+  }
+
+  Future<Map<String, dynamic>?> getCurrenUserData() async {
+    String currentUserId = firebaseAuth.currentUser!.uid;
+    final user = await userCollection.doc(currentUserId).get();
+    return user.data();
+  }
+
+  Future<Object?> getUserDataByAccountNo(String accountNo) async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('users').where('account_no', isEqualTo: accountNo).limit(1).get();
+    Object? data = snapshot.docs.first.data();
+    return data;
+  }
+
+  Future<void> updateBalance(
+      {required String senderUserId, required String receiverUserId, required String amount}) async {
+    final sender = userCollection.doc(senderUserId);
+    final receiver = userCollection.doc(receiverUserId);
+
+    final senderSnapshot = await sender.get();
+    final receiverSnapshot = await receiver.get();
+
+    num senderBalance = senderSnapshot.data()!['total_balance'];
+    num receiverBalance = receiverSnapshot.data()!['total_balance'];
+
+    senderBalance -= num.parse(amount);
+    receiverBalance += num.parse(amount);
+
+    await sender.update({"total_balance": senderBalance});
+    await receiver.update({"total_balance": receiverBalance});
+
+    print("Balance updated");
+  }
+
+  Future<bool> checkAccount(String accountNo) async {
+    QuerySnapshot query = await userCollection.where('account_no', isEqualTo: accountNo).get();
+    return query.docs.isEmpty ? false : true;
   }
 
   bool _isEmail(String email) {
@@ -89,5 +143,12 @@ class AuthService {
   Future<bool> checkPhone(String phone) async {
     QuerySnapshot query = await FirebaseFirestore.instance.collection('users').where('phone', isEqualTo: phone).get();
     return query.docs.isEmpty ? true : false;
+  }
+
+  String generateRandomNumber() {
+    Random random = Random();
+    int min = 100000000;
+    int max = 999999999;
+    return (min + random.nextInt(max - min + 1)).toString();
   }
 }

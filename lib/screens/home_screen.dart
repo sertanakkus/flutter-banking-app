@@ -1,3 +1,4 @@
+import 'package:banking_app/screens/send_money/send_money.dart';
 import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/home_app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -207,11 +208,14 @@ class Operations extends StatelessWidget {
             Column(
               children: [
                 GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const SendMoney(),
+                        )),
                     child: Image.asset(
-                  ImagePaths.money_send,
-                  width: Sizes.size24,
-                  height: Sizes.size50,
-                )),
+                      ImagePaths.money_send,
+                      width: Sizes.size24,
+                      height: Sizes.size50,
+                    )),
                 Text(Strings.send),
               ],
             ),

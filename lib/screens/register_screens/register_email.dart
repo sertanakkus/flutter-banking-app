@@ -103,8 +103,11 @@ class _RegisterEmailState extends State<RegisterEmail> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: Sizes.size50,
+                  ),
                   _checkEmail()
-                      ? const Text('available email')
+                      ? const SizedBox.shrink()
                       : const Text(
                           'not available',
                           style: TextStyle(color: Colors.red),

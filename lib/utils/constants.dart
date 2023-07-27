@@ -18,6 +18,7 @@ class Sizes {
   static double size32 = 32;
   static double size38 = 38;
   static double size40 = 40;
+  static double size45 = 45;
   static double size50 = 50;
   static double size53 = 53;
   static double size55 = 55;
@@ -68,6 +69,10 @@ class ImagePaths {
   static String cardLogo = 'assets/home_images/card_items/card_logo.png';
   static String chip = 'assets/home_images/card_items/chip.png';
   static String coin = 'assets/home_images/coin.png';
+
+  // send money
+  static String emptyTransaction = 'assets/send_money/empty_transaction.png';
+  static String securePayment = 'assets/send_money/secure_payment.png';
 }
 
 class Strings {
@@ -143,4 +148,25 @@ class Strings {
   static String myPocket = "My Pocket";
   static String create = "Create";
   static String currency = "Currency";
+
+  // send money
+  static String sendFund = 'Send Fund';
+  static String newTransfer = 'New Transfer';
+  static String quickTransfer = 'Quick Transfer';
+  static String dFlyBankUsers = 'Dragonfly bank users';
+  static String oBankUsers = 'Other bank users';
+  static String recent = 'Recent';
+  static String emptyTransaction = 'Empty Transaction';
+  static String noTransaction = 'You have no transactions at this time';
+  static String account = 'Account';
+  static String accountTextField = 'Enter the account number or username';
+  static String accountTextFieldLabel = 'Account / Username';
+  static String confirm = 'Confirm';
+  static String mainWallet = 'Main Wallet';
+  static String totalTranfer = 'Total transfer';
+  static String usd = 'USD';
+  static String transferNow = 'Transfer Now';
+  static String paymentSuccessful = 'Payment Successful';
+  static String transactionSuccessful = 'Transaction completed successfully';
+  static String backHome = 'Back Home';
 }

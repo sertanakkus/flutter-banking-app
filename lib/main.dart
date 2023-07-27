@@ -1,5 +1,6 @@
-import 'package:banking_app/screens/login_screen.dart';
 import 'package:banking_app/screens/main_page_controller.dart';
+import 'package:banking_app/screens/onboarding_screens/onboarding_page.dart';
+import 'package:banking_app/screens/send_money/success_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -41,8 +42,11 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: const ColorScheme.light(),
         ),
-        home: const LoginScreen(),
-        routes: {"/home": (context) => const MainPageController()},
+        home: const OnboardingPage(),
+        routes: {
+          "/home": (context) => const MainPageController(),
+          "/success-send-money": (context) => const SendMoneySuccessScreen(),
+        },
       ),
     );
   }

@@ -6,22 +6,23 @@ import 'package:provider/provider.dart';
 import '../models/user_model.dart';
 
 class AppButton extends StatelessWidget {
-  final StatefulWidget? targetWidget;
+  final Widget? targetWidget;
   final String? pushNamedTarget;
+
   final bool _isValid;
   final String title;
   final String? registerType;
   final List<String>? registerData;
 
-  const AppButton(
-      {super.key,
-      required this.title,
-      required bool isValid,
-      this.targetWidget,
-      this.registerType,
-      this.registerData,
-      this.pushNamedTarget})
-      : _isValid = isValid;
+  const AppButton({
+    super.key,
+    required this.title,
+    required bool isValid,
+    this.targetWidget,
+    this.registerType,
+    this.registerData,
+    this.pushNamedTarget,
+  }) : _isValid = isValid;
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +49,16 @@ class AppButton extends StatelessWidget {
               // print(registerData);
               AuthService()
                   .signIn(context, username: registerData![0], email: registerData![0], password: registerData![1]);
+            } else if (registerType == 'confirmSendMoney') {
+              AuthService().updateBalance(
+                  senderUserId: registerData![0], receiverUserId: registerData![1], amount: registerData![2]);
+              Navigator.of(context).pushNamed('/success-send-money', arguments: registerData![2]);
             }
           }
           if (targetWidget != null && _isValid) {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => targetWidget!));
           } else if (pushNamedTarget != null && _isValid) {
-            Navigator.of(context).pushNamed(pushNamedTarget!);
+            Navigator.of(context).pushNamed(pushNamedTarget!, arguments: registerData);
           }
         },
         style: ButtonStyle(
