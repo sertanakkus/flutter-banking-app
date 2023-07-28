@@ -71,6 +71,8 @@ flutter:
     - assets/home_images/
     - assets/home_images/card_items/
     - assets/send_money/
+    - assets/request_money/
+    - assets/history_images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

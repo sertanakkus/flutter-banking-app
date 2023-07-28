@@ -1,5 +1,4 @@
 import 'package:banking_app/screens/main_page_controller.dart';
-import 'package:banking_app/screens/onboarding_screens/onboarding_page.dart';
 import 'package:banking_app/screens/send_money/success_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +41,7 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: const ColorScheme.light(),
         ),
-        home: const OnboardingPage(),
+        home: const MainPageController(),
         routes: {
           "/home": (context) => const MainPageController(),
           "/success-send-money": (context) => const SendMoneySuccessScreen(),

@@ -21,6 +21,9 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
   String amount = '';
   final _transferController = TextEditingController();
 
+  // checkbox
+  bool isChecked = false;
+
   @override
   void initState() {
     super.initState();
@@ -103,6 +106,23 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
                         border: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                         focusedBorder: const UnderlineInputBorder()),
                   ),
+                  CheckboxListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.only(top: Sizes.size20),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: const Text('Add to quick transfer'),
+                    checkColor: Colors.white,
+                    activeColor: Colors.green,
+                    side: const BorderSide(
+                      color: Colors.black,
+                    ),
+                    value: isChecked,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isChecked = value!;
+                      });
+                    },
+                  ),
                   const Spacer(),
                   Image.asset(ImagePaths.securePayment),
                   Padding(
@@ -111,7 +131,7 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
                       title: Strings.transferNow,
                       isValid: true,
                       registerType: 'confirmSendMoney',
-                      registerData: [_currentUserData!['id'], _userData!['id'], amount],
+                      registerData: [_currentUserData!['id'], _userData!['id'], amount, isChecked.toString()],
                     ),
                   )
                 ],

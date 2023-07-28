@@ -1,3 +1,5 @@
+import 'package:banking_app/screens/history/main_history.dart';
+import 'package:banking_app/screens/request_money.dart';
 import 'package:banking_app/screens/send_money/send_money.dart';
 import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/home_app_bar.dart';
@@ -222,22 +224,28 @@ class Operations extends StatelessWidget {
             Column(
               children: [
                 GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const RequestMoney(),
+                        )),
                     child: Image.asset(
-                  ImagePaths.money_receive,
-                  width: Sizes.size24,
-                  height: Sizes.size50,
-                )),
+                      ImagePaths.money_receive,
+                      width: Sizes.size24,
+                      height: Sizes.size50,
+                    )),
                 Text(Strings.request),
               ],
             ),
             Column(
               children: [
                 GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const MainHistory(),
+                        )),
                     child: Image.asset(
-                  ImagePaths.receipt,
-                  width: Sizes.size24,
-                  height: Sizes.size50,
-                )),
+                      ImagePaths.receipt,
+                      width: Sizes.size24,
+                      height: Sizes.size50,
+                    )),
                 Text(Strings.history),
               ],
             ),

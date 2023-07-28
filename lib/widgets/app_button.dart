@@ -52,6 +52,9 @@ class AppButton extends StatelessWidget {
             } else if (registerType == 'confirmSendMoney') {
               AuthService().updateBalance(
                   senderUserId: registerData![0], receiverUserId: registerData![1], amount: registerData![2]);
+              registerData![3] == 'true' ? AuthService().addToQuickTransfer(registerData![1]) : null;
+
+              AuthService().updateHistory('out', registerData![1], registerData![2]);
               Navigator.of(context).pushNamed('/success-send-money', arguments: registerData![2]);
             }
           }

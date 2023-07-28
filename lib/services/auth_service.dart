@@ -119,6 +119,84 @@ class AuthService {
     print("Balance updated");
   }
 
+  Future<void> addToQuickTransfer(String userId) async {
+    String currentUserId = firebaseAuth.currentUser!.uid;
+    final user = userCollection.doc(currentUserId);
+
+    final userSnapshot = await user.get();
+    List<dynamic> currentList = userSnapshot.data()?['quick_transfer'] ?? [];
+
+    if (!currentList.contains(userId)) {
+      currentList.add(userId);
+      user.update({'quick_transfer': currentList});
+      print("user $userId added to quick transfer list");
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getQuickTransferList() async {
+    String currentUserId = firebaseAuth.currentUser!.uid;
+    final user = userCollection.doc(currentUserId);
+
+    final userSnapshot = await user.get();
+
+    List<dynamic> transferList = userSnapshot.data()?['quick_transfer'];
+
+    List<Map<String, dynamic>> userLlist = [];
+
+    for (var id in transferList) {
+      var userToAdd = await getUserData(id) as Map<String, dynamic>;
+
+      userLlist.add(userToAdd);
+    }
+
+    return userLlist;
+  }
+
+  Future<void> updateHistory(String transactionType, String otherUserId, String amount) async {
+    String currentUserId = firebaseAuth.currentUser!.uid;
+    final currentUser = userCollection.doc(currentUserId);
+    final currentUserSnapshot = await currentUser.get();
+
+    final otherUser = userCollection.doc(otherUserId);
+    final otherUserSnapshot = await otherUser.get();
+
+    List<dynamic> currentUserHistory = currentUserSnapshot.data()!['history'];
+    List<dynamic> otherUserHistory = otherUserSnapshot.data()!['history'];
+
+    if (transactionType == 'out') {
+      currentUserHistory.add({
+        'amount': num.tryParse(amount),
+        'date': DateTime.now(),
+        'transaction_type': transactionType,
+        'user_id': otherUserId
+      });
+
+      otherUserHistory.add(
+          {'amount': num.tryParse(amount), 'date': DateTime.now(), 'transaction_type': 'in', 'user_id': currentUserId});
+    } else {
+      currentUserHistory.add(
+          {'amount': num.tryParse(amount), 'date': DateTime.now(), 'transaction_type': 'in', 'user_id': otherUserId});
+
+      otherUserHistory.add({
+        'amount': num.tryParse(amount),
+        'date': DateTime.now(),
+        'transaction_type': transactionType,
+        'user_id': currentUserId
+      });
+    }
+
+    currentUser.update({'history': currentUserHistory});
+    otherUser.update({'history': otherUserHistory});
+  }
+
+  Future<List<dynamic>> getHistory() async {
+    String currentUserId = firebaseAuth.currentUser!.uid;
+    final currentUser = userCollection.doc(currentUserId);
+    final currentUserSnapshot = await currentUser.get();
+
+    return currentUserSnapshot.data()!['history'];
+  }
+
   Future<bool> checkAccount(String accountNo) async {
     QuerySnapshot query = await userCollection.where('account_no', isEqualTo: accountNo).get();
     return query.docs.isEmpty ? false : true;

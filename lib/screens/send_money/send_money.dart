@@ -1,5 +1,6 @@
 import 'package:banking_app/screens/send_money/company_bank_transaction.dart';
 import 'package:banking_app/screens/send_money/other_bank_transaction.dart';
+import 'package:banking_app/screens/send_money/quick_transfer.dart';
 import 'package:banking_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -19,12 +20,7 @@ class _SendMoneyState extends State<SendMoney> with TickerProviderStateMixin {
     _tabController = TabController(length: 2, vsync: this);
   }
 
-  final List<Widget> _widgetList = <Widget>[
-    const NewTransfer(),
-    const Center(
-      child: Text("quick transfer"),
-    ),
-  ];
+  final List<Widget> _widgetList = <Widget>[const NewTransfer(), const QuickTransfer()];
 
   @override
   Widget build(BuildContext context) {
