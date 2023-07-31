@@ -1,4 +1,4 @@
-import 'package:banking_app/screens/history/main_history.dart';
+import 'package:banking_app/screens/history/information_history.dart';
 import 'package:banking_app/screens/request_money.dart';
 import 'package:banking_app/screens/send_money/send_money.dart';
 import 'package:banking_app/utils/constants.dart';
@@ -239,7 +239,7 @@ class Operations extends StatelessWidget {
               children: [
                 GestureDetector(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const MainHistory(),
+                          builder: (context) => const HistoryInformation(),
                         )),
                     child: Image.asset(
                       ImagePaths.receipt,

@@ -12,10 +12,11 @@ class QuickTransfer extends StatefulWidget {
 
 class _QuickTransferState extends State<QuickTransfer> {
   List<Map<String, dynamic>>? _quickTransferList;
-
+  bool _isLoading = true;
   @override
   void initState() {
     super.initState();
+
     _getQuickTransferList();
   }
 
@@ -24,13 +25,14 @@ class _QuickTransferState extends State<QuickTransfer> {
 
     setState(() {
       _quickTransferList = quickTransferList;
+      _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _quickTransferList == null
+      body: _isLoading == true
           ? Center(
               child: CircularProgressIndicator(
               color: AppColors.baseColor,

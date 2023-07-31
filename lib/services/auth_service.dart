@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:email_validator/email_validator.dart';
 
+import 'package:intl/src/intl/date_format.dart';
+
 class AuthService {
   final userCollection = FirebaseFirestore.instance.collection("users");
   final firebaseAuth = FirebaseAuth.instance;
@@ -139,7 +141,7 @@ class AuthService {
 
     final userSnapshot = await user.get();
 
-    List<dynamic> transferList = userSnapshot.data()?['quick_transfer'];
+    List<dynamic> transferList = userSnapshot.data()?['quick_transfer'] ?? [];
 
     List<Map<String, dynamic>> userLlist = [];
 
@@ -168,20 +170,32 @@ class AuthService {
         'amount': num.tryParse(amount),
         'date': DateTime.now(),
         'transaction_type': transactionType,
-        'user_id': otherUserId
+        'user_id': otherUserId,
+        'username': otherUserSnapshot.data()!['username'],
       });
 
-      otherUserHistory.add(
-          {'amount': num.tryParse(amount), 'date': DateTime.now(), 'transaction_type': 'in', 'user_id': currentUserId});
+      otherUserHistory.add({
+        'amount': num.tryParse(amount),
+        'date': DateTime.now(),
+        'transaction_type': 'in',
+        'user_id': currentUserId,
+        'username': currentUserSnapshot.data()!['username']
+      });
     } else {
-      currentUserHistory.add(
-          {'amount': num.tryParse(amount), 'date': DateTime.now(), 'transaction_type': 'in', 'user_id': otherUserId});
+      currentUserHistory.add({
+        'amount': num.tryParse(amount),
+        'date': DateTime.now(),
+        'transaction_type': 'in',
+        'user_id': otherUserId,
+        'username': otherUserSnapshot.data()!['username']
+      });
 
       otherUserHistory.add({
         'amount': num.tryParse(amount),
         'date': DateTime.now(),
         'transaction_type': transactionType,
-        'user_id': currentUserId
+        'user_id': currentUserId,
+        'username': currentUserSnapshot.data()!['username'],
       });
     }
 
@@ -194,7 +208,77 @@ class AuthService {
     final currentUser = userCollection.doc(currentUserId);
     final currentUserSnapshot = await currentUser.get();
 
-    return currentUserSnapshot.data()!['history'];
+    List<dynamic> history = currentUserSnapshot.data()!['history'] ?? [];
+
+    for (var el in history) {
+      DateTime dt = (el['date'] as Timestamp).toDate();
+
+      el['date'] = DateFormat.MMMd().format(dt);
+    }
+
+    return history.reversed.toList();
+
+    // return currentUserSnapshot.data()!['history'];
+  }
+
+  Future<num> getIncome() async {
+    String currentUserId = firebaseAuth.currentUser!.uid;
+    final currentUser = userCollection.doc(currentUserId);
+    final currentUserSnapshot = await currentUser.get();
+
+    List<dynamic> currentUserHistory = currentUserSnapshot.data()!['history'] ?? [];
+
+    num totalIn = 0;
+
+    for (var el in currentUserHistory) {
+      if (el['transaction_type'] == 'in') {
+        totalIn += el['amount'];
+      }
+    }
+
+    return totalIn;
+  }
+
+  Future<num> getSpending() async {
+    String currentUserId = firebaseAuth.currentUser!.uid;
+    final currentUser = userCollection.doc(currentUserId);
+    final currentUserSnapshot = await currentUser.get();
+
+    List<dynamic> currentUserHistory = currentUserSnapshot.data()!['history'] ?? [];
+
+    num totalSpending = 0;
+
+    for (var el in currentUserHistory) {
+      if (el['transaction_type'] == 'out') {
+        totalSpending += el['amount'];
+      }
+    }
+    return totalSpending;
+  }
+
+  Future<List> getTransactionHistoryByDate(String startDate, String endDate) async {
+    print('start');
+    String currentUserId = firebaseAuth.currentUser!.uid;
+    final currentUser = userCollection.doc(currentUserId);
+    final currentUserSnapshot = await currentUser.get();
+
+    List<dynamic> currentUserHistory = currentUserSnapshot.data()!['history'] ?? [];
+
+    List transactionList = [];
+
+    for (var el in currentUserHistory) {
+      DateTime historyDate = DateTime.parse((el['date'] as Timestamp).toDate().toString());
+      if (historyDate.isAfter(DateTime.parse(startDate)) && historyDate.isBefore(DateTime.parse(endDate))) {
+        transactionList.add(el);
+      }
+      DateTime dt = (el['date'] as Timestamp).toDate();
+
+      el['date'] = DateFormat.MMMd().format(dt);
+    }
+
+    // print(transactionList);
+
+    return transactionList.reversed.toList();
   }
 
   Future<bool> checkAccount(String accountNo) async {
