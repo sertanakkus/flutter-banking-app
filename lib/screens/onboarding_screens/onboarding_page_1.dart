@@ -10,18 +10,25 @@ class OnboardingPage1 extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-            padding: EdgeInsets.only(top: Sizes.size38),
-            child: Stack(children: [
-              Padding(
-                  padding: EdgeInsets.only(top: Sizes.size67),
-                  child: Image.asset(
-                    ImagePaths.onboarding1_2,
-                  )),
-              Image.asset(
-                ImagePaths.onboarding1_1,
-              ),
-            ])),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+                padding: EdgeInsets.only(top: Sizes.size38),
+                child: Stack(children: [
+                  Padding(
+                      padding: EdgeInsets.only(top: Sizes.size67),
+                      child: Image.asset(
+                        ImagePaths.onboarding1_2,
+                        width: 250,
+                      )),
+                  Image.asset(
+                    ImagePaths.onboarding1_1,
+                    width: 200,
+                  ),
+                ])),
+          ],
+        ),
         Padding(
           padding: EdgeInsets.only(top: Sizes.size29),
           child: Padding(
@@ -53,7 +60,6 @@ class OnboardingPage1 extends StatelessWidget {
             ],
           ),
         ),
-        const Spacer(),
       ],
     );
   }

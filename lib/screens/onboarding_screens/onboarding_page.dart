@@ -47,14 +47,20 @@ class _OnboardingPageState extends State<OnboardingPage> {
             ),
           ),
           Padding(
-              padding: EdgeInsets.only(bottom: Sizes.size50, left: Sizes.size16, right: Sizes.size16),
+              padding: EdgeInsets.only(bottom: Sizes.size40, left: Sizes.size16, right: Sizes.size16),
               child: AppButton(
                 title: Strings.getStarted,
                 isValid: true,
-                targetWidget: const LoginScreen(),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+                },
               )),
         ],
       ),
     );
+  }
+
+  onPressed(context) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 }

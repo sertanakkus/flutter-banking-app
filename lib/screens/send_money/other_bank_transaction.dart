@@ -105,31 +105,36 @@ class _OtherBankMoneyTransferState extends State<OtherBankMoneyTransfer> {
               Padding(
                 padding: EdgeInsets.only(bottom: Sizes.size40),
                 child: AppButton(
-                    title: Strings.next,
-                    isValid: true,
-                    targetWidget: _isValidAccount
-                        ? ConfirmTransaction(
-                            accountNo: accountNo,
-                            bankName: selectedOption,
-                          )
-                        : AlertDialog(
-                            backgroundColor: Colors.white,
-                            title: const Text(
-                              'Invalid Account',
-                              textAlign: TextAlign.center,
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text(
-                                  'OK',
-                                  style: TextStyle(color: AppColors.baseColor),
-                                ),
+                  title: Strings.next,
+                  isValid: true,
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+                      return _isValidAccount
+                          ? ConfirmTransaction(
+                              accountNo: accountNo,
+                              bankName: selectedOption,
+                            )
+                          : AlertDialog(
+                              backgroundColor: Colors.white,
+                              title: const Text(
+                                'Invalid Account',
+                                textAlign: TextAlign.center,
                               ),
-                            ],
-                          )),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(color: AppColors.baseColor),
+                                  ),
+                                ),
+                              ],
+                            );
+                    }));
+                  },
+                ),
               )
             ],
           ),

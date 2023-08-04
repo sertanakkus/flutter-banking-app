@@ -29,6 +29,7 @@ class Sizes {
   static double size89 = 89;
   static double size92 = 92;
   static double size140 = 140;
+  static double size150 = 150;
   static double size200 = 200;
   static double size255 = 255;
   static double size261 = 261;
@@ -73,6 +74,11 @@ class ImagePaths {
   // send money
   static String emptyTransaction = 'assets/send_money/empty_transaction.png';
   static String securePayment = 'assets/send_money/secure_payment.png';
+
+  // pocket
+  static String deposit = 'assets/pocket_images/deposit.png';
+  static String withdraw = 'assets/pocket_images/withdraw.png';
+  static String edit = 'assets/pocket_images/edit.png';
 }
 
 class Strings {

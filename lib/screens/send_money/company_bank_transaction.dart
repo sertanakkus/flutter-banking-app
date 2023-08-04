@@ -72,31 +72,45 @@ class _CompanyBankMoneyTransferState extends State<CompanyBankMoneyTransfer> {
               ),
               const Spacer(),
               Padding(
-                padding: EdgeInsets.only(bottom: Sizes.size40),
-                child: AppButton(
+                  padding: EdgeInsets.only(bottom: Sizes.size40),
+                  child: AppButton(
                     title: Strings.next,
                     isValid: true,
-                    targetWidget: _isValidAccount
-                        ? ConfirmTransaction(accountNo: accountNo)
-                        : AlertDialog(
-                            backgroundColor: Colors.white,
-                            title: const Text(
-                              'Invalid Account',
-                              textAlign: TextAlign.center,
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text(
-                                  'OK',
-                                  style: TextStyle(color: AppColors.baseColor),
-                                ),
-                              ),
-                            ],
-                          )),
-              )
+                    onTap: () {
+                      _isValidAccount
+                          ? Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) => ConfirmTransaction(accountNo: accountNo)))
+                          : showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return SizedBox(
+                                  height: Sizes.size255,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.warning,
+                                              color: Colors.amber,
+                                              size: Sizes.size40,
+                                            ),
+                                            Text(
+                                              'Invalid Account!',
+                                              style: TextStyle(fontSize: Sizes.size24),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                    },
+                  ))
             ],
           ),
         ),
@@ -104,3 +118,23 @@ class _CompanyBankMoneyTransferState extends State<CompanyBankMoneyTransfer> {
     );
   }
 }
+
+
+// AlertDialog(
+//                             backgroundColor = Colors.white,
+//                             title = const Text(
+//                               'Invalid Account',
+//                               textAlign: TextAlign.center,
+//                             ),
+//                             actions = [
+//                               TextButton(
+//                                 onPressed: () {
+//                                   Navigator.pop(context);
+//                                 },
+//                                 child: Text(
+//                                   'OK',
+//                                   style: TextStyle(color: AppColors.baseColor),
+//                                 ),
+//                               ),
+//                             ],
+//                           )

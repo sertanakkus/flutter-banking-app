@@ -3,6 +3,8 @@ import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/info.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:provider/provider.dart';
+import '../../models/user_model.dart';
 import 'register_username.dart';
 
 import '../../widgets/app_button.dart';
@@ -118,9 +120,11 @@ class _RegisterEmailState extends State<RegisterEmail> {
                     child: AppButton(
                       title: Strings.next,
                       isValid: _checkEmail(),
-                      targetWidget: const RegisterUsername(),
-                      registerType: 'email',
-                      registerData: [_emailController.text],
+                      onTap: () {
+                        Provider.of<UserModel>(context, listen: false).setEmail(_emailController.text);
+                        Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(builder: (context) => const RegisterUsername()));
+                      },
                     ),
                   ),
                 ],

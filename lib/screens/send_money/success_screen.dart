@@ -1,4 +1,4 @@
-import 'package:banking_app/screens/home_screen.dart';
+import 'package:banking_app/screens/main_page_controller.dart';
 import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/app_button.dart';
 import 'package:banking_app/widgets/base_app_bar.dart';
@@ -46,7 +46,10 @@ class SendMoneySuccessScreen extends StatelessWidget {
                 child: AppButton(
                   title: Strings.backHome,
                   isValid: true,
-                  targetWidget: const HomeScreen(),
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) => const MainPageController()));
+                  },
                 ),
               )
             ],

@@ -80,17 +80,27 @@ class AuthService {
       "account_no": generateRandomNumber(),
       "cards": [],
       "email": email,
+      "history": [],
       "id": id,
       "password": password,
       "phone": phone,
+      "quick_transfer": [],
       "total_balance": 0,
       "username": username
     });
   }
 
-  Future<Map<String, dynamic>?> getCurrenUserData() async {
+  Future<DocumentReference<Map<String, dynamic>>> getCurrentUser() async {
+    String currentUserId = firebaseAuth.currentUser!.uid;
+    final user = userCollection.doc(currentUserId);
+
+    return user;
+  }
+
+  Future<Map<String, dynamic>?> getCurrentUserData() async {
     String currentUserId = firebaseAuth.currentUser!.uid;
     final user = await userCollection.doc(currentUserId).get();
+
     return user.data();
   }
 
@@ -156,13 +166,17 @@ class AuthService {
 
   Future<void> updateHistory(String transactionType, String otherUserId, String amount) async {
     String currentUserId = firebaseAuth.currentUser!.uid;
-    final currentUser = userCollection.doc(currentUserId);
-    final currentUserSnapshot = await currentUser.get();
+    // final currentUser = userCollection.doc(currentUserId);
+    // final currentUserSnapshot = await currentUser.get();
+
+    final currentUser = await getCurrentUser();
+    final currentUserSnapshot = await getCurrentUserData();
 
     final otherUser = userCollection.doc(otherUserId);
     final otherUserSnapshot = await otherUser.get();
 
-    List<dynamic> currentUserHistory = currentUserSnapshot.data()!['history'];
+    // List<dynamic> currentUserHistory = currentUserSnapshot.data()!['history'];
+    List<dynamic> currentUserHistory = currentUserSnapshot!['history'];
     List<dynamic> otherUserHistory = otherUserSnapshot.data()!['history'];
 
     if (transactionType == 'out') {
@@ -179,7 +193,7 @@ class AuthService {
         'date': DateTime.now(),
         'transaction_type': 'in',
         'user_id': currentUserId,
-        'username': currentUserSnapshot.data()!['username']
+        'username': currentUserSnapshot['username']
       });
     } else {
       currentUserHistory.add({
@@ -195,7 +209,7 @@ class AuthService {
         'date': DateTime.now(),
         'transaction_type': transactionType,
         'user_id': currentUserId,
-        'username': currentUserSnapshot.data()!['username'],
+        'username': currentUserSnapshot['username'],
       });
     }
 
@@ -205,10 +219,9 @@ class AuthService {
 
   Future<List<dynamic>> getHistory() async {
     String currentUserId = firebaseAuth.currentUser!.uid;
-    final currentUser = userCollection.doc(currentUserId);
-    final currentUserSnapshot = await currentUser.get();
+    final currentUserSnapshot = await userCollection.doc(currentUserId).get();
 
-    List<dynamic> history = currentUserSnapshot.data()!['history'] ?? [];
+    List<dynamic> history = currentUserSnapshot.data()?['history'] ?? [];
 
     for (var el in history) {
       DateTime dt = (el['date'] as Timestamp).toDate();
@@ -217,16 +230,17 @@ class AuthService {
     }
 
     return history.reversed.toList();
-
-    // return currentUserSnapshot.data()!['history'];
   }
 
   Future<num> getIncome() async {
-    String currentUserId = firebaseAuth.currentUser!.uid;
-    final currentUser = userCollection.doc(currentUserId);
-    final currentUserSnapshot = await currentUser.get();
+    // String currentUserId = firebaseAuth.currentUser!.uid;
+    // final currentUser = userCollection.doc(currentUserId);
+    // final currentUserSnapshot = await currentUser.get();
 
-    List<dynamic> currentUserHistory = currentUserSnapshot.data()!['history'] ?? [];
+    final currentUser = await getCurrentUser();
+    final currentUserSnapshot = await getCurrentUserData();
+
+    List<dynamic> currentUserHistory = currentUserSnapshot!['history'] ?? [];
 
     num totalIn = 0;
 
@@ -240,11 +254,14 @@ class AuthService {
   }
 
   Future<num> getSpending() async {
-    String currentUserId = firebaseAuth.currentUser!.uid;
-    final currentUser = userCollection.doc(currentUserId);
-    final currentUserSnapshot = await currentUser.get();
+    // String currentUserId = firebaseAuth.currentUser!.uid;
+    // final currentUser = userCollection.doc(currentUserId);
+    // final currentUserSnapshot = await currentUser.get();
 
-    List<dynamic> currentUserHistory = currentUserSnapshot.data()!['history'] ?? [];
+    final currentUser = await getCurrentUser();
+    final currentUserSnapshot = await getCurrentUserData();
+
+    List<dynamic> currentUserHistory = currentUserSnapshot!['history'] ?? [];
 
     num totalSpending = 0;
 
@@ -257,12 +274,14 @@ class AuthService {
   }
 
   Future<List> getTransactionHistoryByDate(String startDate, String endDate) async {
-    print('start');
-    String currentUserId = firebaseAuth.currentUser!.uid;
-    final currentUser = userCollection.doc(currentUserId);
-    final currentUserSnapshot = await currentUser.get();
+    // String currentUserId = firebaseAuth.currentUser!.uid;
+    // final currentUser = userCollection.doc(currentUserId);
+    // final currentUserSnapshot = await currentUser.get();
 
-    List<dynamic> currentUserHistory = currentUserSnapshot.data()!['history'] ?? [];
+    final currentUser = await getCurrentUser();
+    final currentUserSnapshot = await getCurrentUserData();
+
+    List<dynamic> currentUserHistory = currentUserSnapshot!['history'] ?? [];
 
     List transactionList = [];
 
@@ -281,9 +300,116 @@ class AuthService {
     return transactionList.reversed.toList();
   }
 
+  Future<void> addCard(String background, String target, String balanceType, String cardNo) async {
+    // String currentUserId = firebaseAuth.currentUser!.uid;
+    // final currentUser = userCollection.doc(currentUserId);
+    // final currentUserSnapshot = await currentUser.get();
+
+    final currentUser = await getCurrentUser();
+    final currentUserSnapshot = await getCurrentUserData();
+
+    List cardList = currentUserSnapshot?['cards'] ?? [];
+
+    cardList.add({
+      'background': background,
+      // 'balance': 0,
+      'balance_type': balanceType,
+      'card_no': generateCardNo(),
+      'target': num.parse(target)
+    });
+
+    await currentUser.update({'cards': cardList});
+  }
+
+  Future<void> updateCardDeposit(String amount, String cardNo) async {
+    // String currentUserId = firebaseAuth.currentUser!.uid;
+    // final currentUser = userCollection.doc(currentUserId);
+    // final currentUserSnapshot = await currentUser.get();
+
+    final currentUser = await getCurrentUser();
+    final currentUserSnapshot = await getCurrentUserData();
+
+    List cardList = currentUserSnapshot?['cards'] ?? [];
+
+    for (var el in cardList) {
+      if (el['card_no'] == cardNo) {
+        el['balance'] += num.parse(amount);
+      }
+    }
+    num totalBalance = currentUserSnapshot!['total_balance'];
+    totalBalance -= num.parse(amount);
+
+    await currentUser.update({'total_balance': totalBalance});
+    await currentUser.update({'cards': cardList});
+  }
+
+  Future<void> updateCardWithdraw(String amount, String cardNo) async {
+    // String currentUserId = firebaseAuth.currentUser!.uid;
+    // final currentUser = userCollection.doc(currentUserId);
+    // final currentUserSnapshot = await currentUser.get();
+
+    final currentUser = await getCurrentUser();
+    final currentUserSnapshot = await getCurrentUserData();
+
+    List cardList = currentUserSnapshot?['cards'] ?? [];
+
+    for (var el in cardList) {
+      if (el['card_no'] == cardNo) {
+        el['balance'] -= num.parse(amount);
+      }
+    }
+
+    num totalBalance = currentUserSnapshot!['total_balance'];
+    totalBalance += num.parse(amount);
+
+    await currentUser.update({'total_balance': totalBalance});
+    await currentUser.update({'cards': cardList});
+  }
+
+  Future<void> editCard(String pocketName, String target, String cardNo) async {
+    // String currentUserId = firebaseAuth.currentUser!.uid;
+    // final currentUser = userCollection.doc(currentUserId);
+    // final currentUserSnapshot = await currentUser.get();
+
+    final currentUser = await getCurrentUser();
+    final currentUserSnapshot = await getCurrentUserData();
+
+    List cardList = currentUserSnapshot?['cards'] ?? [];
+
+    for (var el in cardList) {
+      if (el['card_no'] == cardNo) {
+        el['balance_type'] = pocketName;
+        el['target'] = num.parse(target);
+      }
+    }
+
+    await currentUser.update({'cards': cardList});
+  }
+
+  String generateCardNo() {
+    final random = Random();
+    String cardNo = '';
+
+    for (int i = 0; i < 16; i++) {
+      cardNo += random.nextInt(10).toString();
+    }
+
+    return cardNo;
+  }
+
   Future<bool> checkAccount(String accountNo) async {
     QuerySnapshot query = await userCollection.where('account_no', isEqualTo: accountNo).get();
+
     return query.docs.isEmpty ? false : true;
+  }
+
+  Future<bool> checkBalance(String amount) async {
+    amount = amount == '' ? '0' : amount;
+    final currentUserData = await getCurrentUserData();
+
+    final balance = currentUserData!['total_balance'];
+
+    return num.parse(amount) < balance;
   }
 
   bool _isEmail(String email) {

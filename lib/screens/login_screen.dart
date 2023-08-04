@@ -6,6 +6,8 @@ import 'package:banking_app/widgets/onboarding_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 
+import '../services/auth_service.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -116,8 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: AppButton(
                     isValid: true,
                     title: 'Login',
-                    registerType: 'login',
-                    registerData: [emailUsername, password],
+                    onTap: () {
+                      AuthService().signIn(context, username: emailUsername, email: emailUsername, password: password);
+                    },
                   ),
                 ),
                 Padding(
@@ -130,8 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
+          const Spacer(),
           Padding(
-              padding: EdgeInsets.only(top: Sizes.size200),
+              padding: EdgeInsets.only(bottom: Sizes.size40),
               child: RichText(
                   text: TextSpan(children: <TextSpan>[
                 TextSpan(text: Strings.haveAccount, style: const TextStyle(color: Colors.black)),

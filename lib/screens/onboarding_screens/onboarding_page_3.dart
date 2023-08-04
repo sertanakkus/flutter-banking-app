@@ -11,7 +11,7 @@ class OnboardingPage3 extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: Sizes.size92, bottom: Sizes.size40),
+            padding: EdgeInsets.only(top: Sizes.size70, bottom: Sizes.size40),
             child: Image.asset(
               ImagePaths.onboarding3,
               width: 328,

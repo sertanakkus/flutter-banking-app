@@ -7,6 +7,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'pocket/add_card.dart';
+import 'pocket/card_detail.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -97,9 +100,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    Text(
-                      Strings.create,
-                      style: TextStyle(color: AppColors.baseColor),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const AddCard(),
+                      )),
+                      child: Text(
+                        Strings.create,
+                        style: TextStyle(color: AppColors.baseColor),
+                      ),
                     ),
                   ]),
                 ),
@@ -151,8 +159,7 @@ class OfferCard extends StatelessWidget {
         children: [
           Image.asset(
             ImagePaths.offer,
-            height: Sizes.size140,
-            fit: BoxFit.cover,
+            height: Sizes.size150,
           ),
           Padding(
             padding: EdgeInsets.only(right: Sizes.size10, left: Sizes.size24, top: Sizes.size10, bottom: Sizes.size10),
@@ -269,81 +276,86 @@ class Cards extends StatelessWidget {
           crossAxisCount: 2, crossAxisSpacing: 17, mainAxisSpacing: 16, childAspectRatio: 163 / 214),
       itemCount: cardData?.length,
       itemBuilder: (context, index) {
-        return Card(
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  Image.asset(
-                    ImagePaths.cardFrame1,
-                    fit: BoxFit.cover,
-                  ),
-                  Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: Sizes.size16, right: Sizes.size16),
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: Image.asset(
-                            ImagePaths.cardLogo,
-                            width: Sizes.size50,
+        return GestureDetector(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => CardDetail(card: cardData![index]),
+          )),
+          child: Card(
+            child: Column(
+              children: [
+                Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Image.asset(
+                      "assets/home_images/card_items/card_frame_${cardData![index]['background']}.png",
+                      fit: BoxFit.cover,
+                    ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: Sizes.size16, right: Sizes.size16),
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: Image.asset(
+                              ImagePaths.cardLogo,
+                              width: Sizes.size50,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: Sizes.size53, left: Sizes.size12),
-                        child: const Align(
+                        Padding(
+                          padding: EdgeInsets.only(top: Sizes.size53, left: Sizes.size12),
+                          child: const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Biancalize',
+                                style: TextStyle(color: Colors.white),
+                              )),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: Sizes.size12),
+                          child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Biancalize',
-                              style: TextStyle(color: Colors.white),
-                            )),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: Sizes.size12),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            // '1234 5678 9000 0000',
-                            cardData?[index]['card_no'],
-                            style: TextStyle(color: Colors.white, fontSize: Sizes.size10),
+                              // '1234 5678 9000 0000',
+                              cardData?[index]['card_no'],
+                              style: TextStyle(color: Colors.white, fontSize: Sizes.size10),
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: Sizes.size14, left: Sizes.size12),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Image.asset(
-                            ImagePaths.chip,
-                            width: Sizes.size20,
+                        Padding(
+                          padding: EdgeInsets.only(top: Sizes.size14, left: Sizes.size12),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Image.asset(
+                              ImagePaths.chip,
+                              width: Sizes.size20,
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: Sizes.size8, left: Sizes.size12),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(cardData?[index]['balance_type']),
+                        )
+                      ],
+                    )
+                  ],
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: Sizes.size8, left: Sizes.size12),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    // '\$ 1,000.00',
-                    "\$ ${cardData?[index]['balance'].toString()}",
-                    style: TextStyle(color: AppColors.baseColor, fontSize: Sizes.size16),
+                Padding(
+                  padding: EdgeInsets.only(top: Sizes.size8, left: Sizes.size12),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(cardData?[index]['balance_type']),
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: Sizes.size8, left: Sizes.size12),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      // '\$ 1,000.00',
+                      "\$ ${cardData?[index]['balance'].toString()}",
+                      style: TextStyle(color: AppColors.baseColor, fontSize: Sizes.size16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

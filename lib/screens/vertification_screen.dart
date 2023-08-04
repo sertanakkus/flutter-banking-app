@@ -124,7 +124,15 @@ class _VertificationScreenState extends State<VertificationScreen> {
             const Spacer(),
             Padding(
               padding: EdgeInsets.only(bottom: Sizes.size55, right: Sizes.size16, left: Sizes.size16),
-              child: AppButton(title: Strings.finish, isValid: _isValid, targetWidget: const OnboardingPage()),
+              child: AppButton(
+                title: Strings.finish,
+                isValid: _isValid,
+                onTap: () {
+                  Navigator.of(context)
+                      .pushReplacement(MaterialPageRoute(builder: (context) => const OnboardingPage()));
+                },
+                // targetWidget: const OnboardingPage(),
+              ),
             ),
           ],
         ),

@@ -1,7 +1,9 @@
 import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/info.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../models/user_model.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/app_button.dart';
 
@@ -118,8 +120,14 @@ class _RegisterPhoneState extends State<RegisterPhone> {
                     child: AppButton(
                       title: Strings.next,
                       isValid: _isValid,
-                      registerType: 'phone',
-                      registerData: [dropdownValue + _phoneController.text],
+                      onTap: () {
+                        Provider.of<UserModel>(context, listen: false).setPhone(dropdownValue + _phoneController.text);
+                        AuthService().signUp(context,
+                            username: Provider.of<UserModel>(context, listen: false).username!,
+                            email: Provider.of<UserModel>(context, listen: false).email!,
+                            password: Provider.of<UserModel>(context, listen: false).password!,
+                            phone: Provider.of<UserModel>(context, listen: false).phone!);
+                      },
                     ),
                   ),
                 ],

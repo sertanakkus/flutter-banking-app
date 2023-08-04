@@ -1,5 +1,5 @@
+import 'package:banking_app/screens/history/empty_history.dart';
 import 'package:banking_app/utils/constants.dart';
-import 'package:banking_app/widgets/app_button.dart';
 import 'package:banking_app/widgets/base_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -23,9 +23,8 @@ class HistoryInformationState extends State<HistoryInformation> {
 
   @override
   void initState() {
+    _getIncomeSpendingAndHistory();
     super.initState();
-    _getIncomeSpending();
-    _getHistory();
   }
 
   void _changeLoading() {
@@ -34,35 +33,23 @@ class HistoryInformationState extends State<HistoryInformation> {
     });
   }
 
-  void _getIncomeSpending() async {
+  void _getIncomeSpendingAndHistory() async {
     _changeLoading();
+
     final totalIncome = await AuthService().getIncome();
     final totalSpending = await AuthService().getSpending();
+
+    final history = await AuthService().getHistory();
 
     setState(() {
       _totalIncome = totalIncome;
       _totalSpending = totalSpending;
       _accumulatedFunds = totalIncome - totalSpending;
-    });
-    _changeLoading();
-  }
 
-  void _getHistory() async {
-    _changeLoading();
-    final history = await AuthService().getHistory();
-
-    setState(() {
       _history = history;
     });
 
     _changeLoading();
-
-    // DateTime dt = (_history![0]['date'] as Timestamp).toDate();
-    // print(dt);
-
-    // String date = DateFormat.MMMd().format(dt);
-
-    // print(date);
   }
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) async {
@@ -98,7 +85,7 @@ class HistoryInformationState extends State<HistoryInformation> {
                       ),
                     ),
                 icon: const Icon(Icons.calendar_month_outlined))),
-        body: _isLoading == true || _history == null
+        body: _isLoading == true
             ? Center(
                 child: CircularProgressIndicator(
                   color: AppColors.baseColor,
@@ -180,58 +167,60 @@ class HistoryInformationState extends State<HistoryInformation> {
                               ),
                             ),
                           ),
-                          ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: _history?.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(bottom: Sizes.size16),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                          _history!.isEmpty
+                              ? const EmptyHistory()
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: _history?.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: Sizes.size16),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Image.asset(
-                                            _history![index]['transaction_type'] == 'in'
-                                                ? ImagePaths.money_receive
-                                                : ImagePaths.money_send,
-                                            width: Sizes.size24,
-                                            height: Sizes.size50,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: Sizes.size12),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  _history![index]['username'],
-                                                  style:
-                                                      const TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                _history![index]['transaction_type'] == 'in'
+                                                    ? ImagePaths.money_receive
+                                                    : ImagePaths.money_send,
+                                                width: Sizes.size24,
+                                                height: Sizes.size50,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: Sizes.size12),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      _history![index]['username'],
+                                                      style: const TextStyle(
+                                                          fontWeight: FontWeight.w500, color: Colors.black),
+                                                    ),
+                                                    Text(
+                                                      '${_history![index]['transaction_type']} - ${_history![index]['date']}',
+                                                      style: TextStyle(color: Colors.black26, fontSize: Sizes.size10),
+                                                    )
+                                                  ],
                                                 ),
-                                                Text(
-                                                  '${_history![index]['transaction_type']} - ${_history![index]['date']}',
-                                                  style: TextStyle(color: Colors.black26, fontSize: Sizes.size10),
-                                                )
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.add),
-                                          Text(
-                                            '\$  ${_history![index]['amount'].toString()}',
-                                            style: const TextStyle(fontWeight: FontWeight.w500),
+                                          Row(
+                                            children: [
+                                              const Icon(Icons.add),
+                                              Text(
+                                                '\$  ${_history![index]['amount'].toString()}',
+                                                style: const TextStyle(fontWeight: FontWeight.w500),
+                                              )
+                                            ],
                                           )
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }),
+                                      ),
+                                    );
+                                  }),
                         ],
                       ),
                     ),
@@ -344,7 +333,7 @@ class HistoryInformationState extends State<HistoryInformation> {
                     style: TextStyle(color: Colors.black54),
                   ),
                 ),
-                const AppButton(title: 'Show Transaction', isValid: true)
+                // const AppButton(title: 'Show Transaction', isValid: true)
               ],
             ),
           ),

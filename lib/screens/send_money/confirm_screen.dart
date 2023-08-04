@@ -20,6 +20,7 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
 
   String amount = '';
   final _transferController = TextEditingController();
+  bool _isSufficient = false;
 
   // checkbox
   bool isChecked = false;
@@ -32,7 +33,7 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
 
   Future<void> _getUserData(accountNo) async {
     Object? snapshot = await AuthService().getUserDataByAccountNo(accountNo);
-    final currentUserData = await AuthService().getCurrenUserData();
+    final currentUserData = await AuthService().getCurrentUserData();
 
     setState(() {
       _userData = snapshot as Map<String, dynamic>?;
@@ -43,6 +44,15 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
   void assignValues() {
     setState(() {
       amount = _transferController.text;
+      _checkBalance(amount);
+    });
+  }
+
+  Future<void> _checkBalance(String amount) async {
+    bool isSufficient = await AuthService().checkBalance(amount);
+
+    setState(() {
+      _isSufficient = isSufficient;
     });
   }
 
@@ -130,8 +140,46 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
                     child: AppButton(
                       title: Strings.transferNow,
                       isValid: true,
-                      registerType: 'confirmSendMoney',
-                      registerData: [_currentUserData!['id'], _userData!['id'], amount, isChecked.toString()],
+                      onTap: () {
+                        if (_isSufficient == true) {
+                          AuthService().updateBalance(
+                              senderUserId: _currentUserData!['id'], receiverUserId: _userData!['id'], amount: amount);
+                          isChecked.toString() == 'true' ? AuthService().addToQuickTransfer(_userData!['id']) : null;
+
+                          AuthService().updateHistory('out', _userData!['id'], amount);
+                          Navigator.of(context).pushNamed('/success-send-money', arguments: amount);
+                        } else {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return SizedBox(
+                                height: Sizes.size255,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.warning,
+                                            color: Colors.amber,
+                                            size: Sizes.size40,
+                                          ),
+                                          Text(
+                                            'Insufficient Balance!',
+                                            style: TextStyle(fontSize: Sizes.size24),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
                     ),
                   )
                 ],

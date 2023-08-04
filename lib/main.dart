@@ -1,4 +1,5 @@
 import 'package:banking_app/screens/main_page_controller.dart';
+import 'package:banking_app/screens/onboarding_screens/onboarding_page.dart';
 import 'package:banking_app/screens/send_money/success_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<UserModel>(create: (_) => (UserModel())),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Banking App',
         theme: ThemeData(
           textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.black54),
           inputDecorationTheme: const InputDecorationTheme(
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: const ColorScheme.light(),
         ),
-        home: const MainPageController(),
+        home: const OnboardingPage(),
         routes: {
           "/home": (context) => const MainPageController(),
           "/success-send-money": (context) => const SendMoneySuccessScreen(),

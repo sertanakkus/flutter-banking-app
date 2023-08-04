@@ -2,7 +2,9 @@ import 'package:banking_app/screens/register_screens/register_phone.dart';
 import 'package:banking_app/utils/constants.dart';
 import 'package:banking_app/widgets/info.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../models/user_model.dart';
 import '../../widgets/app_button.dart';
 
 class RegisterPassword extends StatefulWidget {
@@ -92,9 +94,11 @@ class _RegisterEmailState extends State<RegisterPassword> {
                     child: AppButton(
                       title: Strings.next,
                       isValid: _isValid,
-                      targetWidget: const RegisterPhone(),
-                      registerType: 'password',
-                      registerData: [_passwordController.text],
+                      onTap: () {
+                        Provider.of<UserModel>(context, listen: false).setPassword(_passwordController.text);
+                        Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(builder: (context) => const RegisterPhone()));
+                      },
                     ),
                   ),
                 ],

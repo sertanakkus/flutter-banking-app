@@ -1,11 +1,13 @@
-import 'package:banking_app/screens/pocket_screen.dart';
+import 'package:banking_app/profile.dart';
+import 'package:banking_app/screens/pocket/pocket_main.dart';
 import 'package:banking_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
 
 class MainPageController extends StatefulWidget {
-  const MainPageController({super.key});
+  final int? index;
+  const MainPageController({super.key, this.index});
 
   @override
   State<MainPageController> createState() => MainPageControllerState();
@@ -16,10 +18,19 @@ class MainPageControllerState extends State<MainPageController> {
 
   final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
-    const PocketScreen(),
-    const PocketScreen(),
-    const PocketScreen(),
+    const PocketMainScreen(),
+    const Center(
+      child: Text('Inbox'),
+    ),
+    const ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedIndex = (widget.index ?? 0);
+  }
 
   void _onItemTapped(int index) {
     setState(() {
