@@ -77,6 +77,7 @@ class Cards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(cardData);
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -155,7 +156,7 @@ class Cards extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "\$ ${cardData?[index]['balance'].toString()}",
+                      "\$ ${cardData?[index]['target'].toString()}",
                       style: TextStyle(color: AppColors.baseColor, fontSize: Sizes.size16),
                     ),
                   ),

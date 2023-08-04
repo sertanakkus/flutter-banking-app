@@ -247,8 +247,8 @@ class _AddCardState extends State<AddCard> {
                 child: AppButton(
                   title: 'Create Pocket',
                   isValid: true,
-                  onTap: () {
-                    AuthService()
+                  onTap: () async {
+                    await AuthService()
                         .addCard(_selectedBackground, _target, _pocketNameController.text, '0000 0000 0000 0000');
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const MainPageController(

@@ -276,6 +276,7 @@ class Cards extends StatelessWidget {
           crossAxisCount: 2, crossAxisSpacing: 17, mainAxisSpacing: 16, childAspectRatio: 163 / 214),
       itemCount: cardData?.length,
       itemBuilder: (context, index) {
+        print(cardData![index]);
         return GestureDetector(
           onTap: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => CardDetail(card: cardData![index]),
@@ -349,7 +350,7 @@ class Cards extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Text(
                       // '\$ 1,000.00',
-                      "\$ ${cardData?[index]['balance'].toString()}",
+                      "\$ ${cardData?[index]['target'].toString()}",
                       style: TextStyle(color: AppColors.baseColor, fontSize: Sizes.size16),
                     ),
                   ),

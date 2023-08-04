@@ -312,11 +312,13 @@ class AuthService {
 
     cardList.add({
       'background': background,
-      // 'balance': 0,
+      'balance': 0,
       'balance_type': balanceType,
       'card_no': generateCardNo(),
       'target': num.parse(target)
     });
+
+    print(cardList);
 
     await currentUser.update({'cards': cardList});
   }
